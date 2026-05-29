@@ -1,5 +1,5 @@
 const CACHE = "wa-direct-v4";
-const ASSETS = ["/", "/icon-192.png", "/icon-512.png", "/icon-maskable-512.png", "/apple-touch-icon.png"];
+const ASSETS = ["./", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
@@ -26,6 +26,8 @@ self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
   if (url.origin !== location.origin) return;
 
+  const fallback = new URL("./", self.registration.scope).toString();
+
   e.respondWith(
     fetch(e.request)
       .then((resp) => {
@@ -35,6 +37,6 @@ self.addEventListener("fetch", (e) => {
         }
         return resp;
       })
-      .catch(() => caches.match(e.request).then((cached) => cached || caches.match("/")))
+      .catch(() => caches.match(e.request).then((cached) => cached || caches.match(fallback)))
   );
 });
